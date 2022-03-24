@@ -1,0 +1,61 @@
+
+In hipo virtual environment:
+
+export ROUGE_EVAL_HOME="/hits/basement/nlp/fatimamh/codes/HipoRank-master/ROUGE-1.5.5/data/"
+pyrouge_set_rouge_path /hits/basement/nlp/fatimamh/codes/HipoRank-master/ROUGE-1.5.5/
+
+chmod 777 ROUGE-1.5.5.pl
+
+Trying: module load XML-Parser/2.44_01-foss-2016b-Perl-5.24.0
+
+Using huggingface rouge now and my own code
+
+
+done:
+exp11
+exp10 without roberta
+exp09
+exp08
+exp07
+exp06
+exp05
+exp04
+exp03
+exp02
+
+
+---------------------------------------------------
+
+exp10: roberta model name is changed
+
+#"roberta_config_path":"/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/roberta-base-nli-mean-tokens/0_Transformer/config.json",
+     "model": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/roberta-base-nli-mean-tokens/0_Transformer/pytorch_model.bin",
+     } #"roberta-large-nli-stsb-mean-tokens"}#"
+
+
+-------------
+creating new hipo env:
+pip install --upgrade tensorflow
+conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
+
+pip install dataclasses
+pip install gensim
+pip install py-rouge
+pip install transformers
+pip install sentence-transformers
+pip install summa
+pip install pandas
+pip install datasets
+pip install rouge_score
+
+
+Error on bert .... 
+pip install transformers==2.3.0 
+resolved with it
+lets downgrade setencetransformer
+
+pip install sentence-transformers==0.3.0
+
+
+
+
