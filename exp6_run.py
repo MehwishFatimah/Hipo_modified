@@ -27,7 +27,7 @@ from tqdm import tqdm
 Effect of document length
 """
 
-DEBUG = True
+DEBUG = False #True
 
 
 # Parent Directory path
@@ -41,46 +41,46 @@ if not os.path.exists(PATH):
     os.makedirs(PATH)
 
 DATASETS = [
-    ("arxiv_nosections_test_0_3000",
-     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt",
-                     "max_words": 3000,
+    ("wiki_nosections_test_0_1000",
+     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/test.txt",
+                     "max_words": 1000,
                      "no_sections": True}
      ),
-    ("arxiv_nosections_test_3000_6000",
-     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt",
-                     "min_words": 3000, "max_words": 6000,
-                     "no_sections": True}
-     ),
-    ("arxiv_nosections_test_6000_9000",
-     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt",
-                     "min_words": 6000, "max_words": 9000,
-                     "no_sections": True}
-     ),
-    ("arxiv_nosections_test_9000_0",
-     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt",
-                     "min_words": 9000,
-                     "no_sections": True}
-     ),
-    ("pubmed_nosections_test_0_2000",
-     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt",
+    #("arxiv_nosections_test_3000_6000",
+    # PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/test.txt",
+    #                 "min_words": 3000, "max_words": 6000,
+    #                 "no_sections": True}
+    # ),
+    #("arxiv_nosections_test_6000_9000",
+    # PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt",
+    #                 "min_words": 6000, "max_words": 9000,
+    #                 "no_sections": True}
+    # ),
+    #("arxiv_nosections_test_9000_0",
+    # PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt",
+    #                 "min_words": 9000,
+    #                 "no_sections": True}
+    # ),
+    ("wiki_nosections_test_0_2000",
+     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/test.txt",
                      "max_words": 2000,
                      "no_sections": True}
      ),
-    ("pubmed_nosections_test_2000_4000",
-     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt",
-                     "min_words": 2000, "max_words": 4000,
-                     "no_sections": True}
-     ),
-    ("pubmed_nosections_test_4000_6000",
-     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt",
-                     "min_words": 4000, "max_words": 6000,
-                     "no_sections": True}
-     ),
-    ("pubmed_nosections_test_6000_0",
-     PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt",
-                     "min_words": 6000,
-                     "no_sections": True}
-     ),
+    #("pubmed_nosections_test_2000_4000",
+    # PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/test.txt",
+    #                 "min_words": 2000, "max_words": 4000,
+    #                 "no_sections": True}
+    # ),
+    #("pubmed_nosections_test_4000_6000",
+    # PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt",
+    #                 "min_words": 4000, "max_words": 6000,
+    #                 "no_sections": True}
+    # ),
+    #("pubmed_nosections_test_6000_0",
+    # PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt",
+    #                 "min_words": 6000,
+    #                 "no_sections": True}
+    # ),
         
 ]
 EMBEDDERS = [
@@ -120,7 +120,7 @@ for embedder_id, embedder, embedder_args in EMBEDDERS:
 
         if dataset_id.startswith("arxiv"):
             Summarizer = DefaultSummarizer(num_words=220)
-        elif dataset_id.startswith("pubmed"):
+        elif dataset_id.startswith("wiki"):
             Summarizer = DefaultSummarizer(num_words=200)
 
         print(f"embedding dataset {dataset_id} with {embedder_id}")

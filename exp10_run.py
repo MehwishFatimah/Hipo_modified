@@ -27,7 +27,7 @@ from tqdm import tqdm
 hiporank with short sentences removed (<5 words) for arxiv
 """
 
-DEBUG = True
+DEBUG = False#True
 
 
 # Parent Directory path
@@ -42,14 +42,14 @@ if not os.path.exists(PATH):
 
 
 DATASETS = [
-    ("pubmed_test", PubmedDataset,
-     {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt", "min_sent_len": 5}
+    ("wiki_cross_test", PubmedDataset,
+     {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/cross/test.txt", "min_sent_len": 5}
      ),
-    ("arxiv_test", PubmedDataset,
-     {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt", "min_sent_len": 5}
-     ),
-    ("arxiv_test_nosections", PubmedDataset,
-     {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt", "min_sent_len": 5, "no_sections": True}
+    #("arxiv_test", PubmedDataset,
+     #{"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt", "min_sent_len": 5}
+     #),
+    ("wiki_cross_test_nosections", PubmedDataset,
+     {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/cross/test.txt", "min_sent_len": 5, "no_sections": True}
      ),
 
 ]
@@ -138,9 +138,9 @@ for embedder_id, embedder, embedder_args in EMBEDDERS:
                         out_file = os.path.join(experiment_path, 'scores.csv')
                         df.to_csv(file, encoding='utf-8')
 
-                        if os.path.exists(file):
-                            score = Evaluate()
-                            score.rouge_scores(file, out_file)
+                        #if os.path.exists(file):
+                        #    score = Evaluate()
+                        #    score.rouge_scores(file, out_file)
 
 
                         #rouge_result = evaluate_rouge(summaries, references)

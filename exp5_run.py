@@ -13,7 +13,7 @@ from tqdm import tqdm
 """
 Lead
 """
-DEBUG = True
+DEBUG = False #True
 
 # Parent Directory path
 OUT_PATH = "/hits/basement/nlp/fatimamh/outputs/hipo/"
@@ -26,12 +26,12 @@ if not os.path.exists(PATH):
     os.makedirs(PATH)
 
 DATASETS = [
-    ("pubmed_val", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt"}),
-    ("arxiv_val", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt"}),
+    ("wiki_cross_test", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/cross/test.txt"}),
+    ("wiki_cross_val", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/cross/val.txt"}),
 ]
 NUM_WORDS = {
-    'pubmed_val': 200,
-    'arxiv_val': 220
+    'wiki_cross_test': 200,
+    'wiki_cross_val': 200
 }
 SUMMARIZERS = [
     ('oracle', OracleSummarizer, {}),
@@ -85,9 +85,9 @@ for (dataset_id, dataset, dataset_args) in DATASETS:
             out_file = os.path.join(experiment_path, 'scores.csv')
             df.to_csv(file, encoding='utf-8')
 
-            if os.path.exists(file):
-                score = Evaluate()
-                score.rouge_scores(file, out_file)      
+            #if os.path.exists(file):
+            #    score = Evaluate()
+            #   score.rouge_scores(file, out_file)      
 
             #rouge_result = evaluate_rouge(summaries, references)
         except FileExistsError:

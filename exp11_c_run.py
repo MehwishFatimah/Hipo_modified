@@ -13,7 +13,7 @@ from tqdm import tqdm
 """
 Textrank
 """
-DEBUG = True
+DEBUG = False #True
 
 # Parent Directory path
 OUT_PATH = "/hits/basement/nlp/fatimamh/outputs/hipo/"
@@ -27,11 +27,11 @@ if not os.path.exists(PATH):
 
 
 DATASETS = [
-    ("wiki_cross_test", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/cross/test.txt"}), # modified: data/pubmed-release
+    ("wiki_cross", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/cross/test.txt"}), # modified: data/pubmed-release
     #("arxiv_test", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt"}), #data/arxiv-release
 ]
 NUM_WORDS = {
-    'wiki_cross_test': 200,
+    'wiki_cross': 200,
     'arxiv_test': 220
 }
 SUMMARIZERS = [
@@ -68,14 +68,17 @@ for (dataset_id, dataset, dataset_args) in DATASETS:
 
             for doc in tqdm(docs):
                 summary = Summarizer.get_summary(doc)
-                print('summary: {}'.format(summary))
+                #print('summary: {}'.format(summary))
                 results.append({
                     "num_sects": len(doc.sections),
                     "num_sents": sum([len(s.sentences) for s in doc.sections]),
                     "summary": summary,
 
                 })
-                summaries.append([s[0] for s in summary])
+                summ = [s[0] for s in summary]
+                summ = ' '.join(map(str, summ))
+                #print('summary: {}'.format(summ))
+                summaries.append(summ)
                 print('summaries len: {}'.format(len(summaries)))
 
                 references.append(doc.reference)
@@ -83,10 +86,10 @@ for (dataset_id, dataset, dataset_args) in DATASETS:
             
             df['reference'] = references
             df['system'] = summaries
-            df['meta'] = results 
+            #df['meta'] = results 
 
             file = os.path.join(experiment_path, 'summaries.csv')
-            out_file = os.path.join(experiment_path, 'scores.csv')
+            #out_file = os.path.join(experiment_path, 'scores.csv')
             df.to_csv(file, encoding='utf-8')
 
             #if os.path.exists(file):

@@ -26,7 +26,7 @@ from tqdm import tqdm
 baselines (no hierarchy, lead positional bias) on test sets
 """
 
-DEBUG = True
+DEBUG = False #True
 
 
 # Parent Directory path
@@ -41,24 +41,24 @@ if not os.path.exists(PATH):
 
 
 DATASETS = [
-    ("pubmed_test_no_sections", PubmedDataset,
-     {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt", "no_sections": True}
+    ("wiki_test_no_sections", PubmedDataset,
+     {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/test.txt", "no_sections": True}
      ),
-    ("arxiv_test_no_sections", PubmedDataset,
-     {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt", "no_sections": True}
-     ),
+    #("arxiv_test_no_sections", PubmedDataset,
+    # {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt", "no_sections": True}
+    # ),
 ]
 EMBEDDERS = [
-    # ("rand_20", RandEmbedder, {"dim": 20}),
+     ("rand_20", RandEmbedder, {"dim": 20}),
     ("pacsum_bert", BertEmbedder,
      {"bert_config_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/pacssum_models/bert_config.json",
       "bert_model_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/pacssum_models/pytorch_model_finetuned.bin",
       "bert_tokenizer": "bert-base-uncased",
       }
     ),
-    # ("st_bert_base", SentTransformersEmbedder,
-    #      {"model": "bert-base-nli-mean-tokens"}
-    #     ),
+     ("st_bert_base", SentTransformersEmbedder,
+          {"model": "bert-base-nli-mean-tokens"}
+         ),
     # ("st_roberta_large", SentTransformersEmbedder,
     #      {"model": "roberta-large-nli-mean-tokens"}
     #     ),
@@ -75,8 +75,7 @@ SCORERS = [
 ]
 
 
-SUMMARIZERS = [DefaultSummarizer(num_words=200),
-               DefaultSummarizer(num_words=220)]
+SUMMARIZERS = [DefaultSummarizer(num_words=200)] #,DefaultSummarizer(num_words=220)]
 
 experiment_time = int(time.time())
 #results_path = Path(f"results/exp8")
@@ -119,12 +118,9 @@ for embedder_id, embedder, embedder_args in EMBEDDERS:
                                 "num_sects": len(doc.sections),
                                 "num_sents": sum([len(s.sentences) for s in doc.sections]),
                                 "summary": summary,
-
                             })
                             summaries.append([s[0] for s in summary])
                             references.append(doc.reference)
-
-
 
                         df['reference'] = references
                         df['system'] = summaries

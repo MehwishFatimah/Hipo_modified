@@ -30,7 +30,7 @@ from tqdm import tqdm
 Test set on pubmed
 """
 
-DEBUG = True
+DEBUG = False #True
 
 
 # Parent Directory path
@@ -44,7 +44,7 @@ if not os.path.exists(PATH):
     os.makedirs(PATH)
 
 DATASETS = [
-    ("pubmed_test", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt"}),
+    ("wiki_test", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/test.txt"}),
 ]
 EMBEDDERS = [
     ("rand_200", RandEmbedder, {"dim": 200}),

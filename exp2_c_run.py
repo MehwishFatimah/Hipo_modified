@@ -1,14 +1,17 @@
+#from hipo_rank.dataset_iterators.cnn_dm import CnndmDataset
 from hipo_rank.dataset_iterators.pubmed import PubmedDataset
 
-from hipo_rank.embedders.bert import BertEmbedder
 from hipo_rank.embedders.rand import RandEmbedder
-from hipo_rank.embedders.sent_transformers import SentTransformersEmbedder
+from hipo_rank.embedders.bert import BertEmbedder
 
 from hipo_rank.similarities.cos import CosSimilarity
 
+from hipo_rank.directions.undirected import Undirected
+from hipo_rank.directions.order import OrderBased
 from hipo_rank.directions.edge import EdgeBased
 
 from hipo_rank.scorers.add import AddScorer
+from hipo_rank.scorers.multiply import MultiplyScorer
 
 from hipo_rank.summarizers.default import DefaultSummarizer
 #from hipo_rank.evaluators.rouge import evaluate_rouge
@@ -22,58 +25,69 @@ import json
 import time
 from tqdm import tqdm
 
-"""
-Test set on arxiv
-"""
 
+#ROUGE_ARGS = "-e /path_to_rouge/RELEASE-1.5.5/data -c 95 -n 2 -a -m"
+
+"""
+cnndm val set
+"""
 DEBUG = False #True
 
 
 # Parent Directory path
 OUT_PATH = "/hits/basement/nlp/fatimamh/outputs/hipo/"
 # Directory
-DIR = "exp04/"
+DIR = "exp02/"
 
 # Path
 PATH = os.path.join(OUT_PATH, DIR)
 if not os.path.exists(PATH):
     os.makedirs(PATH)
 
+
 DATASETS = [
-    ("arxiv_test", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt"}),
+    #("pubmed_test", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt"}),
+    ("wiki_cross_test", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/cross/test.txt"}),
 ]
 EMBEDDERS = [
-    # ("rand_200", RandEmbedder, {"dim": 200}),
+    ("rand_768", RandEmbedder, {"dim": 768}),
     ("pacsum_bert", BertEmbedder,
      {"bert_config_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/pacssum_models/bert_config.json",
       "bert_model_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/pacssum_models/pytorch_model_finetuned.bin",
       "bert_tokenizer": "bert-base-uncased",
       }
     ),
-    # ("st_bert_base", SentTransformersEmbedder,
-    #      {"model": "bert-base-nli-mean-tokens"}
-    #     ),
-    # ("st_roberta_large", SentTransformersEmbedder,
-    #      {"model": "roberta-large-nli-mean-tokens"}
-    #     ),
 ]
 SIMILARITIES = [
     ("cos", CosSimilarity, {}),
 ]
 DIRECTIONS = [
+    ("undirected", Undirected, {}),
+    ("order", OrderBased, {}),
     ("edge", EdgeBased, {}),
+    ("backloaded_edge", EdgeBased, {"u": 0.8}),
+    ("frontloaded_edge", EdgeBased, {"u": 1.2}),
 ]
 
 SCORERS = [
     ("add_f=0.0_b=1.0_s=1.0", AddScorer, {}),
+    ("add_f=0.0_b=1.0_s=1.5", AddScorer, {"section_weight": 1.5}),
+    ("add_f=0.0_b=1.0_s=0.5", AddScorer, {"section_weight": 0.5}),
+    ("add_f=-0.2_b=1.0_s=1.0", AddScorer, {"forward_weight":-0.2}),
+    ("add_f=-0.2_b=1.0_s=1.5", AddScorer, {"forward_weight":-0.2, "section_weight": 1.5}),
+    ("add_f=-0.2_b=1.0_s=0.5", AddScorer, {"forward_weight":-0.2,"section_weight": 0.5}),
+    ("add_f=0.5_b=1.0_s=1.0", AddScorer, {"forward_weight":0.5}),
+    ("add_f=0.5_b=1.0_s=1.5", AddScorer, {"forward_weight":0.5, "section_weight": 1.5}),
+    ("add_f=0.5_b=1.0_s=0.5", AddScorer, {"forward_weight":0.5,"section_weight": 0.5}),
+    ("multiply", MultiplyScorer, {}),
 ]
 
 
-Summarizer = DefaultSummarizer(num_words=220)
+Summarizer = DefaultSummarizer(num_words=60)
 
 experiment_time = int(time.time())
 # results_path = Path(f"results/{experiment_time}")
-#results_path = Path(f"results/exp4")
+#results_path = Path(f"results/exp2")
 
 for embedder_id, embedder, embedder_args in EMBEDDERS:
     Embedder = embedder(**embedder_args)
@@ -115,10 +129,12 @@ for embedder_id, embedder, embedder_args in EMBEDDERS:
                                 "summary": summary,
 
                             })
-                            summaries.append([s[0] for s in summary])
+                            summ = [s[0] for s in summary]
+                            summ = ' '.join(map(str, summ))
+                            #print('summary: {}'.format(summ))
+                            summaries.append(summ)
+                            print('summaries len: {}'.format(len(summaries)))
                             references.append(doc.reference)
-
-
 
                         df['reference'] = references
                         df['system'] = summaries
@@ -128,10 +144,9 @@ for embedder_id, embedder, embedder_args in EMBEDDERS:
                         out_file = os.path.join(experiment_path, 'scores.csv')
                         df.to_csv(file, encoding='utf-8')
 
-                        if os.path.exists(file):
-                            score = Evaluate()
-                            score.rouge_scores(file, out_file)
-
+                        #if os.path.exists(file):
+                        #    score = Evaluate()
+                        #    score.rouge_scores(file, out_file)
 
                     except FileExistsError:
                         print(f"{experiment} already exists, skipping...")

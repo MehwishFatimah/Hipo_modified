@@ -1,5 +1,6 @@
 from datasets import load_metric
 import pandas as pd
+import torch
 
 class Evaluate(object):
 	'''----------------------------------------------------------------
@@ -12,7 +13,7 @@ class Evaluate(object):
 	def __init__(self):
 
 		self.metric = load_metric("rouge")
-		
+		self.device  = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 	'''----------------------------------------------------------------
 	Rouge score

@@ -31,7 +31,7 @@ from tqdm import tqdm
 """
 cnndm val set
 """
-DEBUG = True
+DEBUG = False #True
 
 
 # Parent Directory path

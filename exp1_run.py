@@ -26,7 +26,7 @@ import json
 import time
 from tqdm import tqdm
 
-DEBUG = True
+DEBUG = False #True
 
 # PubMed hyperparameter gridsearch and ablation study
 
@@ -41,14 +41,14 @@ if not os.path.exists(PATH):
     os.makedirs(PATH)
 
 DATASETS = [
-    ("pubmed_val", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/val.txt"}),
-    ("pubmed_val_no_sections", PubmedDataset,
-     {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/val.txt", "no_sections": True}
+    ("wiki_val", PubmedDataset, {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/val.txt"}),
+    ("wiki_val_no_sections", PubmedDataset,
+     {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/val.txt", "no_sections": True}
      ),
 ]
 EMBEDDERS = [
-    #("rand_200", RandEmbedder, {"dim": 200}),
-    #("biomed_w2v", W2VEmbedder,{"bin_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/wikipedia-pubmed-and-PMC-w2v.bin"}),
+    ("rand_200", RandEmbedder, {"dim": 200}),
+    ("biomed_w2v", W2VEmbedder,{"bin_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/wikipedia-pubmed-and-PMC-w2v.bin"}),
     ("biobert", BertEmbedder,
      {"bert_config_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/biobert_v1.1_pubmed/bert_config.json",
       "bert_model_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/biobert_v1.1_pubmed/pytorch_model.bin",

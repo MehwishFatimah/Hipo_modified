@@ -27,7 +27,7 @@ from tqdm import tqdm
 hiporank with similarity thresholding (B=0.3)
 """
 
-DEBUG = True
+DEBUG = False #True
 
 
 # Parent Directory path
@@ -41,24 +41,24 @@ if not os.path.exists(PATH):
     os.makedirs(PATH)
 
 DATASETS = [
-    ("pubmed_test", PubmedDataset,
-     {"file_path": "/hits/basement/nlp/fatimamh/inputs/pubmed-dataset/test.txt"}
+    ("wiki_test", PubmedDataset,
+     {"file_path": "/hits/basement/nlp/fatimamh/inputs/wiki_pub_style/mono/test.txt"}
      ),
-    ("arxiv_test", PubmedDataset,
-     {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt"}
-     ),
+    #("arxiv_test", PubmedDataset,
+    # {"file_path": "/hits/basement/nlp/fatimamh/inputs/arxiv-dataset/test.txt"}
+    # ),
 ]
 EMBEDDERS = [
-    ("rand_20", RandEmbedder, {"dim": 20}),
-    ("pacsum_bert", BertEmbedder,
-     {"bert_config_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/pacssum_models/bert_config.json",
-      "bert_model_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/pacssum_models/pytorch_model_finetuned.bin",
-      "bert_tokenizer": "bert-base-uncased",
-      }
-    ),
-    # ("st_bert_base", SentTransformersEmbedder,
-    #      {"model": "bert-base-nli-mean-tokens"}
-    #     ),
+    #("rand_20", RandEmbedder, {"dim": 20}),
+    #("pacsum_bert", BertEmbedder,
+    # {"bert_config_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/pacssum_models/bert_config.json",
+    #  "bert_model_path": "/hits/basement/nlp/fatimamh/codes/HipoRank-master/models/pacssum_models/pytorch_model_finetuned.bin",
+    #  "bert_tokenizer": "bert-base-uncased",
+    #  }
+    #),
+     ("st_bert_base", SentTransformersEmbedder,
+          {"model": "bert-base-nli-mean-tokens"}
+         ),
     # ("st_roberta_large", SentTransformersEmbedder,
     #      {"model": "roberta-large-nli-mean-tokens"}
     #     ),
@@ -77,8 +77,7 @@ SCORERS = [
 ]
 
 
-SUMMARIZERS = [DefaultSummarizer(num_words=200),
-               DefaultSummarizer(num_words=220)]
+SUMMARIZERS = [DefaultSummarizer(num_words=200)]#, DefaultSummarizer(num_words=220)]
 
 experiment_time = int(time.time())
 #results_path = Path(f"results/exp9")
